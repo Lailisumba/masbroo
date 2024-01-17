@@ -36,7 +36,10 @@
  
  <a class="btn btn-primary" href="/">Add New User</a>
  <a class="btn btn-success" onclick="generateExcel()">Download List Peserta (Excel)</a>
- <table>
+  <button class="btn btn-secondary" type="button" onclick="downloadSertif()">Download Semua TagName dan Sertifikat</button>
+ <a class="btn btn-primary" href="/download-photos-pdf">Download Photos untuk dikirim ke percetakan</a>
+  <a class="btn btn-secondary" href="/kirimbroadcast">Broadcast Whatsapp Message</a>
+  <table class="table table-responsive">
  <thead>
  <tr>
   <th>Nomor Urut Peserta</th>
@@ -51,6 +54,8 @@
  <th>Profile Picture</th>
  <th>Quotes Words</th>
  <th>Print TagName</th>
+ <th>Download Sertifikat</th>
+ <th>Kirim Whatsapp ulang</th>
  <th>Edit</th>
  <th>Delete</th>
  </tr>
@@ -69,8 +74,10 @@
  <td><%= user.blazer_size %></td>
  <td><img src="<%= user.profile_picture %>"/></td>
  <td><%= user.quotes_words %></td>
- <td><a class="btn btn-primary" href="/tagname/<%= user._id %>">Print Tagname</a></td>
- <td><a class="btn btn-success" href="/edit/<%= user._id %>">Edit</a></td>
+ <td><a class="btn btn-primary" href="/tagname/<%= user._id %>">Print Tagname</a>
+ <td><a class="btn btn-success" target="_blank" id="downloadsertif" href="/download/<%= user._id %>">Download Sertifikat</a></td>
+ <td><a class="btn btn-secondary" href="/sendinformation/<%= user._id %>">Kirim Whatsapp Ulang</a></td>
+ <td><a class="btn btn-success" href="/editbaru/<%= user._id %>">Edit</a></td>
  <td><form method="POST" action="/delete/<%= user._id %>"><button type="submit">Delete</button></form></td>
  </tr>
  <% }); %>
@@ -78,6 +85,33 @@
  </table>
 </body>
 <script>
+
+  function downloadSertif() {
+    alert('Mohon diperhatikan, biarkan proses mendownload berjalan (proses akan membuka tab baru lalu menutup sendiri) sampai proses berjalan selesai, bisa di minimize dan menggunakan browser chrome di window baru')
+    // Dapatkan semua tombol download di dalam tabel
+    var downloadButtons = document.querySelectorAll("#downloadsertif");
+
+    // Fungsi rekursif untuk mengklik tombol dengan jeda waktu
+    function clickWithDelay(index) {
+      if (index < downloadButtons.length) {
+        var downloadButton = downloadButtons[index];
+        var downloadButtonClone = downloadButton.cloneNode(true);
+
+        // Buka link di tab baru menggunakan salinan objek downloadButton
+        window.open(downloadButtonClone.href, "_blank");
+
+        setTimeout(function() {
+          // Lanjutkan ke tombol berikutnya setelah 3000 ms
+          clickWithDelay(index + 1);
+        }, 1500);
+      }
+    }
+
+    // Mulai dengan tombol pertama
+    clickWithDelay(0);
+  }
+
+
   // This function will be triggered when the "Save" button is clicked
 function generateExcel() {
   // Show a prompt to get the desired filename from the user

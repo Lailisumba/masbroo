@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.2.1/html2canvas.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>
+        Download Tag Name
+    </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head> 
+
+<body spellcheck="false" >
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <a class="navbar-brand" href="#">FLC Registration System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+          </ul>
+        </div>
+    </nav>
+  
+      <div style="width:100%; text-align: center; margin: 50px 0px -50px 0px; z-index: 99999; position: relative;">
+        <marquee scrollamount="15"><b><h3 style="font-style: italic;">Peserta tidak perlu mencetak apapun tetapi diwajibkan mengisinya | Participants are not required to print anything.</h3></b></marquee>
+        <br/>
+        <br/>
+        <h1>Registrasi Anda Berhasil!! </h1>
+        <h5>Silahkan klik tombol dibawah untuk menyimpan Foto Tagname anda ke gallery anda, link ini juga sudah dikirimkan ke whatsapp anda apabila file tag name terhapus
+        </h5>
+        <i><h6>(Please click the button below to save your Tagname photo to your gallery. This link has also been sent to your WhatsApp if the tag name file is deleted.)
+
+          </h6></i>
+        <!-- <i>File Foto Sudah berukuran Letter, ketika anda print tinggal pilih kertas Letter, area potong akan sesuai dengan ukuran Name Tag Holder yaitu <strong>126x95mm</strong><br>
+        Jika anda menggunakan kertas A4, tetap pilih letter pada pengaturan print, terima kasih</i><br> -->
+        <i>Cetak dengan Ukuran <strong>Kertas A4  untuk Sertifikat</strong>, untuk tagname bebas<br>
+          <i>Print in A4 paper size for certificates<br>
+        </i><br>
+        <button id="convert-btn" class="btn btn-primary">Download Tag Name</button>
+        <button id="download-sertifikat" class="btn btn-success">Download Certificate</button>
+        
+    </div>
+    <div class="wcdiv wcpage" style="width:100mm; height:145mm;" id="this-content">
+      <div class="caiyo">
+
+        <div class="wcdiv"><img class="wcimg" style="left: 0pt;top: 0pt;width: 100mm;height: 145mm;" src="/SOP.png" width="269.28pt" height="357.12pt"></div>
+        <div class="wcdiv" style="left:161pt; top:237.67pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext001" style="font-size: 21.5pt;color:#202124;left: -214.98px;top: -15px;width: 355px;text-align: center;text-transform: capitalize;font-family: NF LePetitcochon !important;font-weight: 300;"><%= user.full_name.toLowerCase().trim() %></span> </div>
+            </div>
+        </div>
+        <div class="wcdiv" style="left:159.99pt; top:259pt;">
+            <div class="wcdiv" >
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext001" style="color:#202124;left: -95pt;top: 13.51pt;line-height:13.29pt;width: 186px;font-size: 19.5pt;text-align: center;font-family: NF LePetitcochon !important;font-weight: 300;"><%= user.position_at_church %></span></div>
+            </div>
+        </div>
+        <div class="wcdiv" style="left:237.5pt; top:279.98pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext002" style="font-size: 12pt;color:#202124;left: -169pt;top: 20pt;line-height:9.97pt;">+<%= user.phone_number %></span></div>
+            </div>
+        </div>
+        <div class="wcdiv" style="left:337.6pt; top:363.38pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext001" style="font-size: 17pt;color:#202124;left: -180pt;top: 12pt;line-height:9.97pt;font-family: NF LePetitcochon !important;font-weight: 300;text-align: center;width: 65px;">SOP - <%= user.user_number %></span>
+                </div>
+            </div>
+        </div>
+        <div class="wcdiv" style="left:237.65pt; top:297.74pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext002" style="font-size: 12pt;color:#202124;left: -169pt;top: 22.8pt;line-height:9.97pt;"><%= user.email %></span></div>
+            </div>
+        </div>
+        <div class="wcdiv" style="left:237.94pt; top:316.25pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext002" style="font-size: 12pt;color:#202124;left: -170pt;top: 25pt;line-height:9.97pt;"><%= user.city %></span> </div>
+            </div>
+        </div>
+        <div class="wcdiv" style="left:252.25pt; top:129.4pt;">
+            <div class="wcdiv" style="left:-2.93pt; top:-2.93pt; width:149px; height:149px;">
+              <!-- <object type="image/svg+xml" data="<%= user.profile_picture %>"></object> -->
+              <img style="border-radius: 50%;height: 75%;width: 75%;margin: 16px 5px 0px -198px;object-fit: cover;" src="<%= user.profile_picture %>" />
+            </div>
+        </div>
+    </div>
+    </div>
+  <div style="width:588pt; height:840pt;" id="sertifikat">
+    <p style="margin-left: 90.68pt">
+      <span style="height: 0pt; display: block; position: absolute; z-index: -1"
+        ><img
+          src="/SERTIFIKAT.png"
+          width="795"
+          height="1122"
+          alt="Sertif"
+          style="
+            margin-top: -4.22pt;
+            margin-left: -97.68pt;
+            position: absolute;
+          " /></span
+      ><span style="height: 0pt; display: block; position: absolute; z-index: 0"
+        ><span
+          width="150"
+          height="732"
+          alt=""
+          style="
+            margin-top: 620px;
+            margin-left: -95px;
+            position: absolute;
+            font-size: 75px;
+            text-align: center;
+            width: 836px;
+            transform: rotate(90deg);
+            font-family: Tangerine;
+            color: #9C6010;
+            line-height: 55px;
+            text-transform: capitalize
+          "
+          ><%= user.full_name.toLowerCase().trim() %></span
+        ></span
+      >&#xa0;
+    </p>
+  </div>
+</body>
+<style>
+@font-face {
+  font-family: NF LePetitcochon;
+  src: url("/Petit.ttf");
+}
+@font-face {
+  font-family: Tangerine;
+  src: url("/Tangerine.ttf");
+}
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
+.wcdiv {
+	position:absolute;
+}
+.wcspan {
+	position:absolute;
+	white-space:pre;
+	color:#000000;
+	font-size:12pt;
+}
+.wcimg {
+	position:absolute;
+}
+.wcsvg {
+	position:absolute;
+}
+.wcpage {
+	position:relative;
+	margin:10pt auto 10pt auto;
+	overflow:hidden;
+}
+@media print {
+	body {
+		margin:0pt;
+		padding:0pt;
+	}
+	.wcpage {
+		page-break-after:always;
+		margin:0pt;
+		padding:0pt;
+        font-weight: 800;
+	}
+}
+.wctext001 {
+	/* font-family:'Calibri'; */
+    font-family: 'Open Sans', sans-serif;
+  /* font-family: NF LePetitcochon; */
+	font-style:normal;
+	font-weight:bold;
+}
+
+span.nama-sertifikat:first-letter, span.nama-sertifikat:first-line {
+    text-transform: capitalize;
+}
+.wctext002 {
+	/* font-family:'Courier-new'; */
+    font-family: 'Open Sans', sans-serif;
+	font-style:normal;
+	font-weight:bold;
+}
+</style>
+<script>
+    window.userData = {
+      fullName: '<%= user.full_name %>',
+      position: '<%= user.position_at_church %>',
+    };
+    var elementNameTag = document.getElementById("this-content");
+    var elementSertifikat = document.getElementById("sertifikat");
+    var fullName = window.userData.fullName;
+
+
+    function test () {
+        html2canvas(elementNameTag, {allowTaint: true, useCORS: true, scale: 3}).then(function(canvas) {
+            // create an anchor tag for the download link
+            var link = document.createElement("a");
+            // link.download = "tagnameSOP.png";
+            link.download = fullName.toLowerCase().trim() + "_tagname.png";
+            link.href = canvas.toDataURL();
+            // trigger the download
+            link.click();
+        });
+      
+      setTimeout(function() {
+        // Buka link di tab baru menggunakan salinan objek downloadButtons[i]
+        window.close();
+      }, 10000);
+    };
+  function downloadSertifikat () {
+      html2canvas(elementSertifikat, {allowTaint: true, useCORS: true, scale: 3}).then(function(canvas) {
+          // create an anchor tag for the download link
+          var link = document.createElement("a");
+          // link.download = "sertifikat.png";
+          link.download = fullName.toLowerCase().trim() + "_sertifikat.png";
+          link.href = canvas.toDataURL();
+          // trigger the download
+          link.click();
+      });
+  };
+  
+  function formatNomorTelepon(nomorTelepon) {
+    // Hapus spasi dan strip dari nomor telepon
+    nomorTelepon = nomorTelepon.replace(/\s/g, "");
+    nomorTelepon = nomorTelepon.replace(/-/g, "");
+
+    // Tambahkan kode negara +62
+    nomorTelepon = "+62" + nomorTelepon;
+
+    // Bagi nomor telepon menjadi 3 bagian, masing-masing 4 digit
+    bagian1 = nomorTelepon.slice(0, 4);
+    bagian2 = nomorTelepon.slice(4, 8);
+    bagian3 = nomorTelepon.slice(8);
+
+    // Gabungkan kembali bagian-bagian nomor telepon
+    nomorTelepon = bagian1 + " " + bagian2 + " " + bagian3;
+
+    return nomorTelepon;
+  }
+  
+// add click event listener to the button
+document.getElementById("convert-btn").addEventListener("click", function() {
+  // use html2canvas to convert the element to image
+  test();
+});
+
+document.getElementById("download-sertifikat").addEventListener("click", function() {
+  // use html2canvas to convert the element to image
+  downloadSertifikat();
+});
+window.onload = (async function () {
+  // test();
+  // setTimeout(function() {
+  //   // Buka link di tab baru menggunakan salinan objek downloadButtons[i]
+  //   downloadSertifikat();
+  // }, 2000);
+})
+  </script>
+
+</html>

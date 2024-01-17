@@ -11,9 +11,23 @@
   <p>Halo <%= user.full_name %>,</p>
   <h4>Untuk Tag Name bisa klik disini:</h4>
   <a href="<%= localURL %>/members/<%= user.id %>">Klik Disini</a>
-  <p>Berikut Informasi pendaftaran anda:</p>
+  <div style="white-space: pre">
+    Selamat anda sudah terdaftar di School of Prophet FLC 2023 angkatan Pertama!
+    Acara akan diadakan pada:
+    14-17 November 2023
+    Tempat : Gedung Unity Lt. 7. Gading Serpong - Tangerang
+    
+    Maps: Unity Ballroom
+    https://maps.app.goo.gl/jxjYDhomC7cc7xaCA?g_st=ic
+    
+    
+        
+    Jika butuh bantuan silakan hubungi Sekretaris kami. 
+    Christina Pakpahan
+    081284673785
+    Berikut Informasi pendaftaran anda:</div>
   <ul>
-    <img style="border-radius: 50%; height: 105%; width: 105%; margin-left: -5px;object-fit: cover;" src="<%= user.profile_picture %>" />
+    <img style="border-radius: 50%; max-height: 200px; max-width: 200px; margin-left: -5px;object-fit: cover;" src="<%= user.profile_picture %>" />
     <li><strong>Email:</strong> <%= user.email %></li>
     <!-- <li><strong>Password:</strong> <%= user.password %></li> -->
     <li><strong>Nama Lengkap:</strong> <%= user.full_name %></li>

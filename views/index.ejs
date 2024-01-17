@@ -29,11 +29,11 @@
     </nav>
 
     <div class="container mt-5">
-        <h1>Daftar AOP</h1>
-        <h5>Selamat datang di formulir pendaftaran AOP, ketika anda menyelesaikan pendaftaran anda dapat 
-            mendownload tagname anda dan mengubahnya secara mandiri jika ada perubahan pada tagname anda.<br><br>
-            Pastikan nomor whatsapp dan email anda aktif karena link download dan link pengubahan data 
-            akan dikirimkan ke nomor/email tersebut, terima kasih Tuhan Yesus Memberkati
+        <h1>Daftar Anggota School of Prophets 1</h1>
+        <h5>Selamat datang di formulir pendaftaran SOP, ketika anda menyelesaikan pendaftaran anda dapat mendownload tagname 
+& Sertifikat anda<br>
+           <i>Welcome to the SOP registration form. Once you complete your registration, you can download your tagname & certificate.</i><br>
+            Per-Anggota SOP pembedanya adalah Nomor Whatsapp
         </h5>
         <form method="POST" enctype="multipart/form-data" action="/register" id="registration-form">
             <div class="form-group">
@@ -41,23 +41,23 @@
                 <input type="email" class="form-control" id="email" name="email" required>
             </div>
             <div class="form-group">
-                <label for="full_name">Nama Lengkap</label>
+                <label for="full_name">Nama Lengkap | <i>Full Name</i></label>
                 <input type="text" class="form-control" id="full_name" name="full_name" required>
             </div>
             <div class="form-group">
-                <label for="born_date">Tanggal Lahir</label>
+                <label for="born_date">Tanggal Lahir | <i>BirthDate</i></label>
                 <input type="date" class="form-control" id="born_date" name="born_date" required>
             </div>
             <div class="form-group">
-                <label for="city">Kota Asal</label>
+                <label for="city">Kota Asal | <i>Country/City Origin</i></label>
                 <input type="text" class="form-control" id="city" name="city" required>
             </div>
             <div class="form-group">
-                <label for="phone_number">Nomor Whatsapp</label>
+                <label for="phone_number">Nomor Whatsapp (Jika Luar negeri pastikan start dengan kode negara. Contoh: Singapore 65) |  <i>Start with your contry code. Example 🇸🇬 +65384878339</i></label>
                 <input type="number" class="form-control" id="phone_number" name="phone_number" required>
             </div>
             <div class="form-group">
-                <label for="position_at_church">Posisi di Gereja</label>
+                <label for="position_at_church">Posisi di Gereja | <i>Position At Church</i></label>
                 <select class="form-control" id="position_at_church" name="position_at_church" required>
                     <option value="">--Select--</option>
                     <option value="Gembala Sidang">Gembala Sidang</option>
@@ -67,7 +67,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="tshirt_size">Ukuran Kaos</label>
+                <label for="tshirt_size">Ukuran Kaos  | <i>T-shirt Size</i></label>
                 <select class="form-control" id="tshirt_size" name="tshirt_size" required>
                     <option value="">--Select--</option>
                     <option value="S">S</option>
@@ -75,10 +75,12 @@
                     <option value="L">L</option>
                     <option value="XL">XL</option>
                     <option value="XXL">XXL</option>
+                    <option value="XXXL">XXXL</option>
+                    <option value="XXXXL">XXXXL</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="blazer_size">Ukuran Jas</label>
+                <label for="blazer_size">Ukuran Jas | <i>Blazer Size</i></label>
                 <select class="form-control" id="blazer_size" name="blazer_size" required>
                     <option value="">--Select--</option>
                     <option value="S">S</option>
@@ -86,20 +88,44 @@
                     <option value="L">L</option>
                     <option value="XL">XL</option>
                     <option value="XXL">XXL</option>
+                    <option value="XXXL">XXXL</option>
+                    <option value="XXXXL">XXXXL</option>
                 </select>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="profile_picture">Foto Anda di Tag Name Nanti</label>
                 <input type="file" class="form-control-file" id="set_file" accept="image/*" required>
                 <input hidden type="text" id="profile_picture" name="profile_picture" required>
                 <img width="500px" src="" alt="" id="preview" />
+            </div> -->
+          <div class="form-group">
+            <label for="set_file">Pilih foto anda dari hape/laptop anda | <i>Choose Photo from your device</i></label>
+            <input type="file" class="form-control-file" id="set_file" accept="image/*" required>
+            <br/>
+            <br/>
+            <div class="sudah_pilih">
+              <label for="profile_picture" class="text-center"><b>Silahkan Geser dan Atur Foto anda sesuai dengan lingkaran berikut | <i>Please Adjust the photo accordingly</i></b></label>
+              <div class="photo-container">
+                <div id="upload-demo"></div>
+              </div>
             </div>
-            <div class="form-group">
+            <!-- <button class="upload-result btn btn-primary" id="upload-result">Crop</button> -->
+            <input hidden type="text" id="profile_picture" name="profile_picture" required>
+            <img width="500px" src="" alt="" id="preview" hidden />
+          </div>
+          
+            <!-- <div class="form-group">
                 <label for="quotes_words">Kata Mutiara</label>
                 <input type="text" class="form-control" id="position_at_church" name="quotes_words" required>
-            </div>
+            </div> -->
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
     </div>
 </body>
 <!-- Add Jquery JS -->
@@ -110,5 +136,81 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="compress.js"></script>
 <script type="text/javascript" src="scriptindex.js"></script>
+
+  <!-- Add CSS Croppie -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" crossorigin="anonymous" />
+<!-- Add JS Croppie -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"  crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+  
+  // Sembunyikan element dengan class "sudah_pilih" saat halaman pertama kali di-load
+  $('.sudah_pilih').hide();
+  
+  // Tambahkan event listener pada input file
+  $('#set_file').change(function() {
+    // Jika nilai value dari input file tidak kosong
+    if ($(this).val() != '') {
+      // Tampilkan element dengan class "sudah_pilih"
+      $('.sudah_pilih').show();
+    } else {
+      // Sembunyikan element dengan class "sudah_pilih"
+      $('.sudah_pilih').hide();
+    }
+  });
+  // Menyimpan gambar yang diupload pada preview
+  var $uploadCrop;
+
+  function readFile(input) {
+    console.log(input.files);
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        $('#preview').attr('src', e.target.result);
+        $uploadCrop.croppie('bind', {
+          url: e.target.result
+        }).then(function(){
+          console.log('jQuery bind complete');
+        });
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+    else {
+      alert("Sorry - you're browser doesn't support the FileReader API");
+    }
+  }
+
+  // Initiate croppie plugin
+  $uploadCrop = $('#upload-demo').croppie({
+    viewport: {
+      width: 400,
+      height: 400,
+      type: 'circle'
+    },
+    boundary: {
+      width: 500,
+      height: 500
+    }
+  });
+
+  // Ketika user memilih gambar yang akan diupload
+  $('#set_file').on('change', function () {
+    readFile(this);
+  });
+
+  // Ketika user meng-klik tombol Crop
+  $('#registration-form').on('click', function (ev) {
+    $uploadCrop.croppie('result', {
+      type: 'canvas',
+      size: 'viewport'
+    }).then(function (resp) {
+      $('#profile_picture').val(resp);
+      $('#preview').attr('src', resp);
+      $('#upload-result').attr('disabled', false);
+    });
+  });
+
+});
+</script>
 
 </html>

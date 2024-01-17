@@ -11,11 +11,14 @@ const FormData = require('form-data');
 const axios = require('axios');
 const requestIP = require('request-ip');
 const ExcelJS = require('exceljs');
+const PDFDocument = require('pdfkit');
+const multer = require('multer');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const localURL = process.env.LOCAL_URL || 'http://localhost:3000'
+const localURL = process.env.LOCAL_URL || `http://localhost:${port}`
 const mongoAtlasUri = process.env.MONGO_ATLAS;
+  const whatsappAPI = process.env.WHATSAPP_API;
 
 app.set("view engine", "ejs");
 
@@ -55,6 +58,48 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("FLCTicket", userSchema);
 
+async function kirimInformasiWhatsapp (phoneNumber, user) {
+  const response = await axios.post(whatsappAPI, {
+    number: phoneNumber,
+    msg: `
+*Selamat anda sudah terdaftar di School of Prophet FLC 2023 angkatan Kedua!*
+
+Acara akan diadakan pada:
+_14-17 November 2023_
+Tempat : Gedung Unity Lt. 7. Gading Serpong - Tangerang
+
+Maps: Unity Ballroom
+https://maps.app.goo.gl/jxjYDhomC7cc7xaCA?g_st=ic
+
+${localURL}/tagname/${user.id}
+
+Jika butuh bantuan silakan hubungi Sekretaris kami. 
+Christina Pakpahan
+6281286197147
+
+=======================
+
+*Congratulations on your registration for the FLC School of Prophet 2023, Second Batch!*
+
+The event will be held on:
+
+14-17 November 2023
+Location: Unity Building, 7th Floor, Gading Serpong, Tangerang
+Maps: Unity Ballroom
+https://maps.app.goo.gl/jxjYDhomC7cc7xaCA?g_st=ic
+
+You can see your TagName and certificate here:
+
+${localURL}/tagname/${user.id}
+
+If you need assistance, please contact our Secretary:
+Christina Pakpahan
+6281286197147`
+  });
+  return response
+}
+
+
 app.get("/", function(req, res) {
   res.render("index");
 });
@@ -72,7 +117,7 @@ app.post('/register', async function(req, res) {
       formData.append('key', '6d207e02198a847aa98d0a2a901485a5');
       formData.append('action', 'upload');
       formData.append('source', base64Image);
-      formData.append('format', 'json');
+      // formData.append('format', 'json');
 
       axios({
         method: "post",
@@ -84,41 +129,51 @@ app.post('/register', async function(req, res) {
 
           const userCount = await User.countDocuments();
 
-
-          const user = new User({
-            user_number: userCount + 1,
-            email: fields.email,
-            full_name: fields.full_name,
-            born_date: fields.born_date,
-            city: fields.city,
-            phone_number: fields.phone_number,
-            position_at_church: fields.position_at_church,
-            tshirt_size: fields.tshirt_size,
-            blazer_size: fields.blazer_size,
-            profile_picture: response.data.image.url,
-            quotes_words: fields.quotes_words
-          });
-
-          const savedUserData = await user.save();
-
-          res.redirect("/tagname/" + user.id);
-          try {
-            const response = await axios.post('https://wa-openai.fahrizal91238.repl.co/sendwhatsapp', {
-              number: fields.phone_number,
-              msg: `Selamat anda sudah terdaftar di School of Prophet 2023! \n\n Berikut link tagname anda yang bisa anda download sekarang!\n ${localURL}/tagname/${user.id}\n\nUntuk edit data anda bisa klik link berikut:\n${localURL}/members/${user.id}`
+          const existingUser = await User.findOne({ phone_number: fields.phone_number });
+          if (existingUser) {
+            existingUser.full_name = fields.full_name;
+            existingUser.born_date = fields.born_date;
+            existingUser.city = fields.city;
+            existingUser.phone_number = fields.phone_number;
+            existingUser.position_at_church = fields.position_at_church;
+            existingUser.tshirt_size = fields.tshirt_size;
+            existingUser.blazer_size = fields.blazer_size;
+            existingUser.quotes_words = fields.quotes_words;
+            await existingUser.save();
+            res.redirect("/tagname/" + existingUser.id);
+          } else {
+            const userCount = await User.countDocuments();
+            const user = new User({
+              user_number: userCount + 1,
+              email: fields.email,
+              full_name: fields.full_name,
+              born_date: fields.born_date,
+              city: fields.city,
+              phone_number: fields.phone_number,
+              position_at_church: fields.position_at_church,
+              tshirt_size: fields.tshirt_size,
+              blazer_size: fields.blazer_size,
+              profile_picture: response.data.image.url,
+              quotes_words: fields.quotes_words
             });
-            console.log(response);
-          } catch (error) {
-            console.error(error);
+            const savedUserData = await user.save();
+            res.redirect("/tagname/" + user.id);
+            try {
+              await kirimInformasiWhatsapp(fields.phone_number, user);
+            } catch (error) {
+              console.error(error);
+            }
+
+            // await sendMail(
+            //   fields.email,
+            //   "Registration Successful",
+            //   "./views/emailTemplate.ejs",
+            //   { user: savedUserData, localURL }
+            // );
           }
 
-          await sendMail(
-            fields.email,
-            "Registration Successful",
-            "./views/emailTemplate.ejs",
-            { user: savedUserData, localURL }
-          );
 
+          // res.redirect("/tagname/" + user.id);
 
         })
         .catch((error) => {
@@ -174,28 +229,68 @@ app.get('/users', async function(req, res) {
   res.render('superuser', { users });
 });
 
-app.get('/delete-all', async function(req, res) {
-  await User.deleteMany();
-  res.render('deleted');
-});
+// app.get('/delete-all', async function(req, res) {
+//   await User.deleteMany();
+//   res.render('deleted');
+// });
 
 app.get('/edit/:id', async function(req, res) {
   const user = await User.findById(req.params.id);
   res.render('edit', { user });
 });
 
+app.get('/editbaru/:id', async function(req, res) {
+  const user = await User.findById(req.params.id);
+  res.render('editbaru', { user });
+});
+
 app.post('/edit/:id', async function(req, res) {
   const user = await User.findById(req.params.id);
-  user.email = req.body.email;
-  user.full_name = req.body.full_name;
-  user.born_date = req.body.born_date;
-  user.city = req.body.city;
-  user.phone_number = req.body.phone_number;
-  user.position_at_church = req.body.position_at_church;
-  user.tshirt_size = req.body.tshirt_size;
-  user.blazer_size = req.body.blazer_size;
-  user.quotes_words = req.body.quotes_words;
-  await user.save();
+
+    const form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files) => {
+      if (err) throw err;
+
+      const file = fields.profile_picture;
+      const base64Image = file;
+
+      const formData = new FormData();
+      formData.append('key', '6d207e02198a847aa98d0a2a901485a5');
+      formData.append('action', 'upload');
+      formData.append('source', base64Image);
+      // formData.append('format', 'json');
+      user.user_number = fields.user_number;
+      user.email = fields.email;
+      user.full_name = fields.full_name;
+      user.born_date = fields.born_date;
+      user.city = fields.city;
+      user.phone_number = fields.phone_number;
+      user.position_at_church = fields.position_at_church;
+      user.tshirt_size = fields.tshirt_size;
+      user.blazer_size = fields.blazer_size;
+      user.quotes_words = fields.quotes_words;
+
+
+      if (base64Image.length > 20) {
+        console.log('HITT')
+        axios({
+          method: "post",
+          url: "https://freeimage.host/api/1/upload",
+          data: formData,
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+          .then(async (response) => {
+            user.profile_picture = response.data.image.url;
+            user.save();
+          })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send({ error: 'Internal server error' });
+          });
+      } else {
+        user.save();
+      }
+    });
   res.redirect('/users');
 });
 
@@ -226,6 +321,10 @@ app.get('/new', function(req, res) {
 
 app.get('/supermenu', function(req, res) {
   res.render('supermenu');
+});
+
+app.get('/kirimbroadcast', function(req, res) {
+  res.render('broadcastWhatsapp');
 });
 
 app.post('/new', async function(req, res) {
@@ -274,6 +373,28 @@ app.get("/tagname/:id", function(req, res) {
     });
 });
 
+app.get("/download/:id", function(req, res) {
+  User.findById(req.params.id)
+    .then(function(user) {
+      res.render("sertifikat", { user });
+    })
+    .catch(function(err) {
+      console.log(err)
+    });
+});
+
+app.get("/sendinformation/:id", function(req, res) {
+  User.findById(req.params.id)
+    .then(async function(user) {
+      // res.render("tagName", { user });
+      await kirimInformasiWhatsapp(user.phone_number, user);
+      res.send(`terkirim ke ${user.phone_number}`);
+    })
+    .catch(function(err) {
+      console.log(err)
+    });
+});
+
 app.get('/public-ip', function(req, res) {
   const ipAddress = requestIP.getClientIp(req);
   res.send("your IP is: " + ipAddress);
@@ -283,6 +404,18 @@ app.get('/uploads/:filename', (req, res) => {
   const filename = req.params.filename;
   const filepath = path.join(__dirname, 'uploads', filename);
   res.sendFile(filepath);
+});
+
+app.post('/broadcastWhatsapp', async function(req, res) {
+  const { message } = req.body;
+  // Get all users from database
+  const users = await User.find();
+  // Send message to all users
+  for (const user of users) {
+    await axios.post(whatsappAPI, { number: user.phone_number, msg: message });
+  }
+  // Redirect to success page
+  res.send(`terkirim ke semuanya`);
 });
 
 const serverStatus = () => {
@@ -325,6 +458,212 @@ app.get('/exceldownload/:filename', async (req, res) => {
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   await workbook.xlsx.write(res);
 });
+
+// app.get('/download-photos-pdf', async (req, res) => {
+//   const doc = new PDFDocument({ size: 'FOLIO' });
+
+//   res.setHeader('Content-Type', 'application/pdf');
+//   res.setHeader('Content-Disposition', 'attachment; filename=photos.pdf');
+
+//   doc.pipe(res);
+
+//   try {
+//     const profiles = await User.find({}).exec();b
+
+//     const maxRowsPerPage = 6;
+//     const maxColsPerPage = 5;
+//     const maxPhotosPerPage = maxRowsPerPage * maxColsPerPage;
+
+//     const margin = 10;
+//     const photoWidth = (doc.page.width - (margin * (maxColsPerPage + 1))) / maxColsPerPage;
+//     const photoHeight = photoWidth * (4 / 3);
+
+//     let currentRow = 0;
+//     let currentCol = 0;
+
+//     for (let index = 0; index < profiles.length; index++) {
+//       const profile = profiles[index];
+//       if (!profile.profile_picture || !profile.full_name) {
+//         continue;
+//       }
+
+//       const response = await axios.get(profile.profile_picture, { responseType: 'arraybuffer' });
+//       const imageBuffer = Buffer.from(response.data);
+//       const filePath = path.join(__dirname, `${profile.phone_number}.png`);
+//       fs.writeFileSync(filePath, imageBuffer);
+//       doc.image(filePath, margin + (currentCol * (photoWidth + margin)), margin + (currentRow * (photoHeight + margin)), { fit: [photoWidth, photoHeight] });
+//       fs.unlinkSync(filePath);
+
+//       if (++currentCol >= maxColsPerPage) {
+//         currentCol = 0;
+//         if (++currentRow >= maxRowsPerPage && index !== profiles.length - 1) {
+//           doc.addPage();
+//           currentRow = 0;
+//         }
+//       }
+
+//       if ((index + 1) % maxPhotosPerPage === 0 && index !== profiles.length - 1) {
+//         doc.addPage();
+//         currentRow = 0;
+//         currentCol = 0;
+//       }
+
+//       if (index === profiles.length - 1) {
+//         doc.end();
+//       }
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     doc.end();
+//     return res.status(500).send('Internal Server Error');
+//   }
+// });
+
+
+app.get('/download-photos-pdf', async (req, res) => {
+  const doc = new PDFDocument({ size: 'FOLIO' });
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=photos.pdf');
+
+  doc.pipe(res);
+
+  try {
+    const profiles = await User.find({}).exec();
+
+    const maxRowsPerPage = 4;
+    const maxColsPerPage = 4;
+    const maxPhotosPerPage = maxRowsPerPage * maxColsPerPage;
+
+    const margin = 10;
+    const photoWidth = (doc.page.width - (margin * (maxColsPerPage + 1))) / maxColsPerPage;
+    const photoHeight = photoWidth * (4 / 3);
+
+    let currentRow = 0;
+    let currentCol = 0;
+
+    for (let index = 0; index < profiles.length; index++) {
+      const profile = profiles[index];
+      if (!profile.profile_picture || !profile.full_name) {
+        continue;
+      }
+
+      const response = await axios.get(profile.profile_picture, { responseType: 'arraybuffer' });
+      const imageBuffer = Buffer.from(response.data);
+      const filePath = path.join(__dirname, `${profile.phone_number}.png`);
+      fs.writeFileSync(filePath, imageBuffer);
+      doc.image(filePath, margin + (currentCol * (photoWidth + margin)), margin + (currentRow * (photoHeight + margin)), { fit: [photoWidth, photoHeight] });
+      fs.unlinkSync(filePath);
+
+      if (++currentCol >= maxColsPerPage) {
+        currentCol = 0;
+        if (++currentRow >= maxRowsPerPage && index !== profiles.length - 1) {
+          doc.addPage();
+          currentRow = 0;
+        }
+      }
+
+      if ((index + 1) % maxPhotosPerPage === 0 && index !== profiles.length - 1) {
+        doc.addPage();
+        currentRow = 0;
+        currentCol = 0;
+      }
+    }
+    
+    // Close and finalize the document after all images have been added
+    doc.end();
+  } catch (err) {
+    console.error(err);
+    doc.end();
+    return res.status(500).send('Internal Server Error');
+  }
+});
+
+const upload = multer({ dest: 'public/uploads/' });
+app.post('/import', upload.single('file'), async (req, res) => {
+
+  try {
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(req.file.path);
+
+    const worksheet = workbook.getWorksheet(1);
+
+    worksheet.eachRow((row, rowNumber) => {
+      // Skip the header row
+      if (rowNumber === 1) return;
+
+      const user = new User({
+        user_number: row.getCell(1).value,
+        email: row.getCell(2).value,
+        full_name: row.getCell(3).value,
+        born_date: row.getCell(4).value,
+        city: row.getCell(5).value,
+        phone_number: row.getCell(6).value,
+        position_at_church: row.getCell(7).value,
+        tshirt_size: row.getCell(8).value,
+        blazer_size: row.getCell(9).value,
+        profile_picture: row.getCell(10).value,
+        quotes_words: row.getCell(11).value,
+      });
+
+      user.save();
+    });
+
+    res.render('infoimport', { status: 'success' });
+  } catch (error) {
+    console.error(error);
+    res.render('infoimport', { status: 'error' });
+  }
+});
+
+
+// app.post('/import', upload.single('file'), async (req, res) => {
+//    console.log(req.file.path);
+
+//   try {
+//     // Baca file excel menggunakan ExcelJS
+//     const workbook = new ExcelJS.Workbook();
+//     await workbook.xlsx.readFile(req.file.path);
+
+//     const worksheet = workbook.getWorksheet(1);
+//     // Hapus judul header pada baris pertama
+//     // worksheet.spliceRows(1, 1);
+
+//     // Loop melalui setiap baris di file excel dan masukkan data ke dalam database
+//     const rows = worksheet.getRows();
+//     console.log(rows)
+//     for (let i = 0; i < rows.length; i++) {
+//       const row = rows[i];
+
+//       const user = new User({
+//         user_number: row.getCell(1).value,
+//         email: row.getCell(2).value,
+//         full_name: row.getCell(3).value,
+//         born_date: row.getCell(4).value,
+//         city: row.getCell(5).value,
+//         phone_number: row.getCell(6).value,
+//         position_at_church: row.getCell(7).value,
+//         tshirt_size: row.getCell(8).value,
+//         blazer_size: row.getCell(9).value,
+//         profile_picture: row.getCell(10).value,
+//         quotes_words: row.getCell(11).value,
+//       });
+//       await user.save();
+//     }
+
+//     res.render('infoimport', { status: 'success' });
+//   } catch (error) {
+//     console.error(error);
+//     res.render('infoimport', { status: 'error' });
+//   }
+// });
+
+
+app.get('/import-data', function(req, res) {
+  res.render('import');
+});
+
+
 
 app.listen(port, function() {
   console.log("Server started on port " + port);

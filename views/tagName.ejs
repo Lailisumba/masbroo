@@ -25,51 +25,111 @@
     </nav>
   
       <div style="width:100%; text-align: center; margin: 50px 0px -50px 0px; z-index: 99999; position: relative;">
+        <marquee scrollamount="15"><b><h3 style="font-style: italic;">Peserta tidak perlu mencetak apapun tetapi diwajibkan mengisinya | Participants are not required to print anything.</h3></b></marquee>
+        <br/>
+        <br/>
         <h1>Registrasi Anda Berhasil!! </h1>
-        <h4>Silahkan klik tombol dibawah untuk menyimpan Foto Tagname anda atau gallery anda karena otomatis terdownload, link ini juga sudah dikirimkan ke whatsapp anda apabila file tag name terhapus</h4>
+        <h5>Silahkan klik tombol dibawah untuk menyimpan Foto Tagname anda ke gallery anda, link ini juga sudah dikirimkan ke whatsapp anda apabila file tag name terhapus
+        </h5>
+        <i><h6>(Please click the button below to save your Tagname photo to your gallery. This link has also been sent to your WhatsApp if the tag name file is deleted.)
+
+          </h6></i>
+        <!-- <i>File Foto Sudah berukuran Letter, ketika anda print tinggal pilih kertas Letter, area potong akan sesuai dengan ukuran Name Tag Holder yaitu <strong>126x95mm</strong><br>
+        Jika anda menggunakan kertas A4, tetap pilih letter pada pengaturan print, terima kasih</i><br> -->
+        <i>Cetak dengan Ukuran <strong>Kertas A4  untuk Sertifikat</strong>, untuk tagname bebas<br>
+          <i>Print in A4 paper size for certificates<br>
+        </i><br>
         <button id="convert-btn" class="btn btn-primary">Download Tag Name</button>
+        <button id="download-sertifikat" class="btn btn-success">Download Certificate</button>
+        
     </div>
     <div class="wcdiv wcpage" style="width:612pt; height:792pt;" id="this-content">
-        <div class="wcdiv"><img class="wcimg" style="left: 125.83pt; top: 60.15pt; width: 380pt; height: 647.15pt;" src="/tagname.png" width="380pt" height="647.15pt"></div>
-        <div class="wcdiv" style="left:219.1pt; top:516.83pt;">
-            <div class="wcdiv" style=" ">
-                <div class="wcdiv" style="left:7.55pt; top:3.95pt;"><span class="wcspan wctext001" style="font-size:14pt; left:0pt; top:0pt; line-height:17.09pt;text-transform: capitalize;"><%= user.phone_number %></span></div>
+        <div class="wcdiv"><img class="wcimg" style="left: 171pt; top: 30.5pt; width: 362px; height: 476px;" src="/SOP.png" width="269.28pt" height="357.12pt"></div>
+        <div class="wcdiv" style="left:161pt; top:237.67pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext001" style="font-size: 21.5pt;color:#202124;left: 6.02px;top: -15px;width: 355px;text-align: center;text-transform: capitalize;font-family: NF LePetitcochon !important;font-weight: 300;"><%= user.full_name.toLowerCase().trim() %></span> </div>
             </div>
         </div>
-        <div class="wcdiv" style="left:218.5pt; top:549.05pt;">
-            <div class="wcdiv" style="">
-                <div class="wcdiv" style="left:7.55pt; top:3.95pt;"><span class="wcspan wctext001" style="font-size:14pt; left:0pt; top:0pt; line-height:17.09pt;text-transform: capitalize;"><%= user.email %></span></div>
+        <div class="wcdiv" style="left:159.99pt; top:259pt;">
+            <div class="wcdiv" >
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext001" style="color:#202124;left: 70pt;top: 7.51pt;line-height:13.29pt;width: 186px;font-size: 19.5pt;text-align: center;font-family: NF LePetitcochon !important;font-weight: 300;"><%= user.position_at_church %></span></div>
             </div>
         </div>
-        <div class="wcdiv" style="left:217.85pt; top:580.35pt;">
-            <div class="wcdiv" style="">
-                <div class="wcdiv" style="left:7.55pt; top:3.95pt;"><span class="wcspan wctext001" style="font-size:14pt; left:0pt; top:0pt; line-height:17.09pt;text-transform: capitalize;"><%= user.city %></span></div>
+        <div class="wcdiv" style="left:237.5pt; top:279.98pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext002" style="font-size:9pt;color:#202124;left:0pt;top: 15px;line-height:9.97pt;">+<%= user.phone_number %></span></div>
             </div>
         </div>
-        <div class="wcdiv" style="left:182.55pt; top:447.42pt;">
-            <div class="wcdiv" style="">
-                <div class="wcdiv" style="left:7.55pt; top:3.95pt;"><span class="wcspan wctext001" style="text-transform: capitalize; font-size:18pt; left:-62.56pt; top:5pt; line-height:19.97pt; width: 500px; text-align:center;"><%= user.full_name %></span> <span class="wcspan wctext001" style="font-size:18pt; left:117.51pt; top:0pt; line-height:21.97pt;">&nbsp;</span></div>
-            </div>
-        </div>
-        <div class="wcdiv" style="left:163.33pt; top:481.15pt;">
-            <div class="wcdiv" style="">
-                <div class="wcdiv" style="left:5.55pt; top:1.95pt;"><span class="wcspan wctext001" style="font-size:18pt; left:-42.02pt; top:0pt; line-height:21.97pt; width: 500px; text-align:center;"><%= user.position_at_church %></span> <span class="wcspan wctext001" style="font-size:18pt; left:143.86pt; top:0pt; line-height:21.97pt;">&nbsp;</span>
+        <div class="wcdiv" style="left:337.6pt; top:363.38pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext001" style="font-size: 14pt;color:#202124;left: -21pt;top: -7.8pt;line-height:9.97pt;font-family: NF LePetitcochon !important;font-weight: 300;text-align: center;width: 65px;">SOP - <%= user.user_number %></span>
                 </div>
             </div>
         </div>
-        <div class="wcdiv" style="left:374.05pt; top:656.02pt;">
-            <div class="wcdiv" style="clip:rect(3.95pt,97.9pt,34.6pt,0.35pt);">
-                <div class="wcdiv" style="left:7.55pt; top:3.95pt;"><span class="wcspan wctext002" style="font-size:22pt; color:#ffffff; left:0pt; top:0pt; line-height:26.86pt;">-</span> <span class="wcspan wctext002" style="font-size:22pt; color:#ffffff; left:6.74pt; top:0pt; line-height:26.86pt;">&nbsp;</span> <span class="wcspan wctext002" style="font-size:22pt; color:#ffffff; left:10.71pt; top:0.7pt; line-height:26.86pt;max-width: 50px; text-align: center;"><%= user.user_number %></span></div>
+        <div class="wcdiv" style="left:237.65pt; top:297.74pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext002" style="font-size:9pt;color:#202124;left:0pt;top: 13.8px;line-height:9.97pt;"><%= user.email %></span></div>
             </div>
         </div>
-        <div class="wcdiv" style="left:234.5pt; top:253.93pt;"><img class="wcimg" style="left: 8.99pt; top: 173.46pt; width: 138.77pt; height: 52.51pt; display:none;" src="/shadow.png" width="138.77pt" height="52.51pt">
-            <div class="wcdiv" style="left:-2.89pt; top:-2.89pt; width:217px; height:218px;">
-                <img style="border-radius: 50%; height: 105%; width: 105%; margin-left: -5px; object-fit: cover;" src="<%= user.profile_picture %>" />
+        <div class="wcdiv" style="left:237.94pt; top:316.25pt;">
+            <div class="wcdiv">
+                <div class="wcdiv" style="left:7.45pt; top:3.85pt;"><span class="wcspan wctext002" style="font-size:9pt;color:#202124;left:0pt;top: 14px;line-height:9.97pt;"><%= user.city %></span> </div>
+            </div>
+        </div>
+        <div class="wcdiv" style="left:252.25pt; top:129.4pt;">
+            <div class="wcdiv" style="left:-2.93pt; top:-2.93pt; width:149px; height:149px;">
+              <!-- <object type="image/svg+xml" data="<%= user.profile_picture %>"></object> -->
+              <img style="border-radius: 50%;height: 75%;width: 75%;margin: 30px 16px 0px 22px;object-fit: cover;" src="<%= user.profile_picture %>" />
             </div>
         </div>
     </div>
+  <div style="width:588pt; height:840pt;" id="sertifikat">
+    <p style="margin-left: 90.68pt">
+      <span style="height: 0pt; display: block; position: absolute; z-index: -1"
+        ><img
+          src="/SERTIFIKAT.png"
+          width="795"
+          height="1122"
+          alt="Sertif"
+          style="
+            margin-top: -4.22pt;
+            margin-left: -97.68pt;
+            position: absolute;
+          " /></span
+      ><span style="height: 0pt; display: block; position: absolute; z-index: 0"
+        ><span
+          class="nama-sertifikat"
+          width="150"
+          height="732"
+          alt=""
+          style="
+            margin-top: 620px;
+            margin-left: -95px;
+            position: absolute;
+            font-size: 75px;
+            text-align: center;
+            width: 836px;
+            transform: rotate(90deg);
+            font-family: Tangerine;
+            color: #9C6010;
+            line-height: 55px;
+            text-transform: capitalize;
+          "
+          ><%= user.full_name.toLowerCase().trim() %></span
+        ></span
+      >&#xa0;
+    </p>
+  </div>
 </body>
 <style>
+@font-face {
+  font-family: NF LePetitcochon;
+  src: url("/Petit.ttf");
+}
+@font-face {
+  font-family: Tangerine;
+  src: url("/Tangerine.ttf");
+}
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
 .wcdiv {
 	position:absolute;
@@ -106,8 +166,13 @@
 .wctext001 {
 	/* font-family:'Calibri'; */
     font-family: 'Open Sans', sans-serif;
+  /* font-family: NF LePetitcochon; */
 	font-style:normal;
 	font-weight:bold;
+}
+
+span.nama-sertifikat:first-letter, span.nama-sertifikat:first-line {
+    text-transform: capitalize;
 }
 .wctext002 {
 	/* font-family:'Courier-new'; */
@@ -117,10 +182,12 @@
 }
 </style>
 <script>
-    var element = document.getElementById("this-content");
+    var elementNameTag = document.getElementById("this-content");
+    var elementSertifikat = document.getElementById("sertifikat");
+
 
     function test () {
-        html2canvas(element, {allowTaint: true, useCORS: true}).then(function(canvas) {
+        html2canvas(elementNameTag, {allowTaint: true, useCORS: true, scale: 3}).then(function(canvas) {
             // create an anchor tag for the download link
             var link = document.createElement("a");
             link.download = "tagnameSOP.png";
@@ -129,11 +196,45 @@
             link.click();
         });
     };
+  function downloadSertifikat () {
+      html2canvas(elementSertifikat, {allowTaint: true, useCORS: true, scale: 3}).then(function(canvas) {
+          // create an anchor tag for the download link
+          var link = document.createElement("a");
+          link.download = "sertifikat.png";
+          link.href = canvas.toDataURL();
+          // trigger the download
+          link.click();
+      });
+  };
+  
+  function formatNomorTelepon(nomorTelepon) {
+    // Hapus spasi dan strip dari nomor telepon
+    nomorTelepon = nomorTelepon.replace(/\s/g, "");
+    nomorTelepon = nomorTelepon.replace(/-/g, "");
 
+    // Tambahkan kode negara +62
+    nomorTelepon = "+62" + nomorTelepon;
+
+    // Bagi nomor telepon menjadi 3 bagian, masing-masing 4 digit
+    bagian1 = nomorTelepon.slice(0, 4);
+    bagian2 = nomorTelepon.slice(4, 8);
+    bagian3 = nomorTelepon.slice(8);
+
+    // Gabungkan kembali bagian-bagian nomor telepon
+    nomorTelepon = bagian1 + " " + bagian2 + " " + bagian3;
+
+    return nomorTelepon;
+  }
+  
 // add click event listener to the button
 document.getElementById("convert-btn").addEventListener("click", function() {
   // use html2canvas to convert the element to image
   test();
+});
+
+document.getElementById("download-sertifikat").addEventListener("click", function() {
+  // use html2canvas to convert the element to image
+  downloadSertifikat();
 });
 window.onload = (async function () {
     test();
