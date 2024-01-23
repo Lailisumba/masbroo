@@ -52,6 +52,7 @@ const userSchema = new mongoose.Schema({
   tshirt_size: String,
   blazer_size: String,
   profile_picture: String,
+  sop1_certificate: String,
   quotes_words: String,
 },
 );
@@ -107,79 +108,84 @@ app.get("/", function(req, res) {
 app.post('/register', async function(req, res) {
   try {
     const form = new formidable.IncomingForm();
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
       if (err) throw err;
 
-      const file = fields.profile_picture;
-      const base64Image = file;
+      const profilePictureFile = fields.profile_picture;
+      const freeImageHostAPIKey = '6d207e02198a847aa98d0a2a901485a5'
 
-      const formData = new FormData();
-      formData.append('key', '6d207e02198a847aa98d0a2a901485a5');
-      formData.append('action', 'upload');
-      formData.append('source', base64Image);
-      // formData.append('format', 'json');
+      // Process profile picture
+      const profilePictureData = new FormData();
+      profilePictureData.append('key', freeImageHostAPIKey);
+      profilePictureData.append('action', 'upload');
+      profilePictureData.append('source', profilePictureFile);
 
-      axios({
-        method: "post",
-        url: "https://freeimage.host/api/1/upload",
-        data: formData,
+      const profilePictureResponse = await axios.post("https://freeimage.host/api/1/upload", profilePictureData, {
         headers: { "Content-Type": "multipart/form-data" },
-      })
-        .then(async (response) => {
+      });
 
-          const userCount = await User.countDocuments();
+      const sop1CertificateFile = files.sop1_certificate;
+      if (!sop1CertificateFile || !sop1CertificateFile.filepath) {
+        return res.status(400).send({ error: sop1CertificateFile });
+      }
+      const sop1CertificateFilePath = sop1CertificateFile.filepath; // Get the file path
 
-          const existingUser = await User.findOne({ phone_number: fields.phone_number });
-          if (existingUser) {
-            existingUser.full_name = fields.full_name;
-            existingUser.born_date = fields.born_date;
-            existingUser.city = fields.city;
-            existingUser.phone_number = fields.phone_number;
-            existingUser.position_at_church = fields.position_at_church;
-            existingUser.tshirt_size = fields.tshirt_size;
-            existingUser.blazer_size = fields.blazer_size;
-            existingUser.quotes_words = fields.quotes_words;
-            await existingUser.save();
-            res.redirect("/tagname/" + existingUser.id);
-          } else {
-            const userCount = await User.countDocuments();
-            const user = new User({
-              user_number: userCount + 1,
-              email: fields.email,
-              full_name: fields.full_name,
-              born_date: fields.born_date,
-              city: fields.city,
-              phone_number: fields.phone_number,
-              position_at_church: fields.position_at_church,
-              tshirt_size: fields.tshirt_size,
-              blazer_size: fields.blazer_size,
-              profile_picture: response.data.image.url,
-              quotes_words: fields.quotes_words
-            });
-            const savedUserData = await user.save();
-            res.redirect("/tagname/" + user.id);
-            try {
-              await kirimInformasiWhatsapp(fields.phone_number, user);
-            } catch (error) {
-              console.error(error);
-            }
+      // Process SOP1 certificate
+      const sopCertificateBase64 = fs.readFileSync(sop1CertificateFilePath, { encoding: 'base64' });
+      const sop1CertificateData = new FormData();
+      sop1CertificateData.append('key', freeImageHostAPIKey);
+      sop1CertificateData.append('action', 'upload');
+      sop1CertificateData.append('source', sopCertificateBase64);
 
-            // await sendMail(
-            //   fields.email,
-            //   "Registration Successful",
-            //   "./views/emailTemplate.ejs",
-            //   { user: savedUserData, localURL }
-            // );
-          }
+      const sop1CertificateResponse = await axios.post("https://freeimage.host/api/1/upload", sop1CertificateData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
+      const userCount = await User.countDocuments();
 
-          // res.redirect("/tagname/" + user.id);
-
-        })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send({ error: 'Internal server error' });
+      const existingUser = await User.findOne({ phone_number: fields.phone_number });
+      if (existingUser) {
+        existingUser.full_name = fields.full_name;
+        existingUser.born_date = fields.born_date;
+        existingUser.city = fields.city;
+        existingUser.phone_number = fields.phone_number;
+        existingUser.position_at_church = fields.position_at_church;
+        existingUser.tshirt_size = fields.tshirt_size;
+        existingUser.blazer_size = fields.blazer_size;
+        existingUser.quotes_words = fields.quotes_words;
+        await existingUser.save();
+        res.redirect("/tagname/" + existingUser.id);
+      } else {
+        const user = new User({
+          user_number: userCount + 1,
+          email: fields.email,
+          full_name: fields.full_name,
+          born_date: fields.born_date,
+          city: fields.city,
+          phone_number: fields.phone_number,
+          position_at_church: fields.position_at_church,
+          tshirt_size: fields.tshirt_size,
+          blazer_size: fields.blazer_size,
+          profile_picture: profilePictureResponse.data.image.url,
+          sop1_certificate: sop1CertificateResponse.data.image.url,
+          quotes_words: fields.quotes_words
         });
+        const savedUserData = await user.save();
+        console.log(profilePictureResponse.dataj)
+        res.redirect("/tagname/" + user.id);
+        try {
+          await kirimInformasiWhatsapp(fields.phone_number, user);
+        } catch (error) {
+          console.error(error);
+        }
+
+        // await sendMail(
+        //   fields.email,
+        //   "Registration Successful",
+        //   "./views/emailTemplate.ejs",
+        //   { user: savedUserData, localURL }
+        // );
+      }
     });
 
     const transporter = nodemailer.createTransport({
@@ -209,7 +215,7 @@ app.post('/register', async function(req, res) {
       }
     };
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     res.status(500).send({ error: 'Internal server error' });
   }
 });
@@ -229,10 +235,10 @@ app.get('/users', async function(req, res) {
   res.render('superuser', { users });
 });
 
-// app.get('/delete-all', async function(req, res) {
-//   await User.deleteMany();
-//   res.render('deleted');
-// });
+app.get('/delete-all', async function(req, res) {
+  await User.deleteMany();
+  res.render('deleted');
+});
 
 app.get('/edit/:id', async function(req, res) {
   const user = await User.findById(req.params.id);
@@ -258,7 +264,6 @@ app.post('/edit/:id', async function(req, res) {
       formData.append('key', '6d207e02198a847aa98d0a2a901485a5');
       formData.append('action', 'upload');
       formData.append('source', base64Image);
-      // formData.append('format', 'json');
       user.user_number = fields.user_number;
       user.email = fields.email;
       user.full_name = fields.full_name;
