@@ -12,7 +12,7 @@ const axios = require('axios');
 const requestIP = require('request-ip');
 const ExcelJS = require('exceljs');
 const PDFDocument = require('pdfkit');
-const multer = require('multer');
+// const multer = require('multer');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -579,42 +579,42 @@ app.get('/download-photos-pdf', async (req, res) => {
   }
 });
 
-const upload = multer({ dest: 'public/uploads/' });
-app.post('/import', upload.single('file'), async (req, res) => {
+// const upload = multer({ dest: 'public/uploads/' });
+// app.post('/import', upload.single('file'), async (req, res) => {
 
-  try {
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile(req.file.path);
+//   try {
+//     const workbook = new ExcelJS.Workbook();
+//     await workbook.xlsx.readFile(req.file.path);
 
-    const worksheet = workbook.getWorksheet(1);
+//     const worksheet = workbook.getWorksheet(1);
 
-    worksheet.eachRow((row, rowNumber) => {
-      // Skip the header row
-      if (rowNumber === 1) return;
+//     worksheet.eachRow((row, rowNumber) => {
+//       // Skip the header row
+//       if (rowNumber === 1) return;
 
-      const user = new User({
-        user_number: row.getCell(1).value,
-        email: row.getCell(2).value,
-        full_name: row.getCell(3).value,
-        born_date: row.getCell(4).value,
-        city: row.getCell(5).value,
-        phone_number: row.getCell(6).value,
-        position_at_church: row.getCell(7).value,
-        tshirt_size: row.getCell(8).value,
-        blazer_size: row.getCell(9).value,
-        profile_picture: row.getCell(10).value,
-        quotes_words: row.getCell(11).value,
-      });
+//       const user = new User({
+//         user_number: row.getCell(1).value,
+//         email: row.getCell(2).value,
+//         full_name: row.getCell(3).value,
+//         born_date: row.getCell(4).value,
+//         city: row.getCell(5).value,
+//         phone_number: row.getCell(6).value,
+//         position_at_church: row.getCell(7).value,
+//         tshirt_size: row.getCell(8).value,
+//         blazer_size: row.getCell(9).value,
+//         profile_picture: row.getCell(10).value,
+//         quotes_words: row.getCell(11).value,
+//       });
 
-      user.save();
-    });
+//       user.save();
+//     });
 
-    res.render('infoimport', { status: 'success' });
-  } catch (error) {
-    console.error(error);
-    res.render('infoimport', { status: 'error' });
-  }
-});
+//     res.render('infoimport', { status: 'success' });
+//   } catch (error) {
+//     console.error(error);
+//     res.render('infoimport', { status: 'error' });
+//   }
+// });
 
 
 // app.post('/import', upload.single('file'), async (req, res) => {
